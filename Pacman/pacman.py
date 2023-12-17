@@ -199,7 +199,7 @@ class Player(pygame.sprite.Sprite):
 
 #Inheritime Player klassist
 class Ghost(Player):
-    # Change the speed of the ghost
+    # Change the speed of player or the susmen
     def changespeed(self,list,ghost,turn,steps,l):
       try:
         z=list[turn][2]
@@ -230,9 +230,6 @@ Pinky_directions = [
 [15,0,3],
 [0,-15,3],
 [15,0,19],
-[0,15,3],
-[15,0,3],
-[0,15,3],
 [15,0,3],
 [0,-15,15],
 [-15,0,7],
@@ -250,11 +247,6 @@ Blinky_directions = [
 [0,15,7],
 [-15,0,11],
 [0,15,3],
-[15,0,15],
-[0,-15,15],
-[15,0,3],
-[0,-15,11],
-[-15,0,3],
 [0,-15,11],
 [-15,0,3],
 [0,-15,3],
@@ -286,13 +278,6 @@ Inky_directions = [
 [0,15,3],
 [15,0,15],
 [0,15,11],
-[-15,0,3],
-[0,-15,7],
-[-15,0,11],
-[0,15,3],
-[-15,0,11],
-[0,15,7],
-[-15,0,3],
 [0,-15,3],
 [-15,0,3],
 [0,-15,15],
@@ -313,16 +298,13 @@ Clyde_directions = [
 [15,0,5],
 [0,15,7],
 [-15,0,11],
-[0,-15,7],
 [-15,0,3],
 [0,15,7],
 [-15,0,7],
 [0,15,15],
-[15,0,15],
 [0,-15,3],
 [-15,0,11],
 [0,-15,7],
-[15,0,3],
 [0,-15,11],
 [15,0,9],
 ]
@@ -371,6 +353,7 @@ c_w = 303+(32-16) #Clyde width
 
 def startGame():
 
+  username = nameEntry(screen)
   all_sprites_list = pygame.sprite.RenderPlain()
 
   block_list = pygame.sprite.RenderPlain()
@@ -511,6 +494,7 @@ def startGame():
       if len(blocks_hit_list) > 0:
           score +=len(blocks_hit_list)
       
+          
       # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
    
       # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
@@ -520,16 +504,22 @@ def startGame():
       gate.draw(screen)
       all_sprites_list.draw(screen)
       monsta_list.draw(screen)
+    
+      
 
       text=font.render("Score: "+str(score)+"/"+str(bll), True, red)
       screen.blit(text, [10, 10])
 
       if score == bll:
+        with open ('scores.csv', 'a') as file:
+            file.write(username + " , " + str(score) +'\n')
         doNext("Congratulations, you won!",145,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
       monsta_hit_list = pygame.sprite.spritecollide(Pacman, monsta_list, False)
 
       if monsta_hit_list:
+        with open ('scores.csv', 'a') as file:
+            file.write(username + " , " + str(score) +'\n')
         doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
       # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
@@ -537,6 +527,32 @@ def startGame():
       pygame.display.flip()
     
       clock.tick(10)
+
+def nameEntry(screen):
+  input_font = pygame.font.Font(None, 36)
+  name = ""
+  input_active = True
+
+  while input_active:
+    for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and len(name) > 0:
+                    input_active = False  # Player entered name, exit loop
+                elif event.key == pygame.K_BACKSPACE:
+                    name = name[:-1]  # Remove last character on backspace
+                else:
+                    name += event.unicode  # Add typed character to name
+
+    # Clear the screen
+    screen.fill(black)
+    # Render name entry text
+    text_surface = input_font.render("Enter your name: " + name, True, white)
+    screen.blit(text_surface, (100, 200))
+
+    pygame.display.flip()
+
+  return name
+
 
 def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate):
   while True:
@@ -546,7 +562,8 @@ def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,w
           pygame.quit()
         if event.type == pygame.KEYDOWN:
           if event.key == pygame.K_ESCAPE:
-            pygame.quit()
+            mainMenu(screen)
+            
           if event.key == pygame.K_RETURN:
             del all_sprites_list
             del block_list
@@ -575,6 +592,163 @@ def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,w
 
       clock.tick(10)
 
-startGame()
+black = (0, 0, 0)
+white = (255, 255, 255)
+blue = (0, 0, 255)
 
-pygame.quit()
+def nameEntry(screen):
+    input_font = pygame.font.Font(None, 36)
+    name = ""
+    input_active = True
+
+    while input_active:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and len(name) > 0:
+                    input_active = False  # Player entered name, exit loop
+                elif event.key == pygame.K_BACKSPACE:
+                    name = name[:-1]  # Remove last character on backspace
+                else:
+                    name += event.unicode  # Add typed character to name
+
+        screen.fill(black)
+
+        text_surface = input_font.render("Enter your name: " + name, True, white)
+        screen.blit(text_surface, (100, 200))
+
+        pygame.display.flip()
+
+    return name
+
+def scoreBoard():
+
+    screen.fill(black)
+    scoreboard_font = pygame.font.Font(None, 36)
+
+    try:
+        with open('scores.csv', 'r') as file:
+            lines = file.readlines()
+        lines.sort(key=lambda x: int(x.split(',')[1]), reverse=True)  # Sort scores by the second column (score)
+        
+
+        title = scoreboard_font.render("Scoreboard", True, white)
+        title_rect = title.get_rect(center=(screen.get_width() // 2, 50))
+        screen.blit(title, title_rect)
+
+        max_width = 0
+        score_entries = []
+
+        alpha_label = scoreboard_font.render("Alpha Lion King Dragon Winner", True, white)
+        alpha_rect = alpha_label.get_rect(center=(screen.get_width() // 2, 80))
+        screen.blit(alpha_label, alpha_rect)
+
+        first_entry = lines[0]  # First entry will be displayed above "The Rest"
+        first_data = first_entry.strip().split(',')
+        first_name = first_data[0]
+        first_score = int(first_data[1])
+
+        # Display first entry above "The Rest"
+        first_text = f"1. {first_name}: {first_score}"
+        first_surface = scoreboard_font.render(first_text, True, white)
+        first_rect = first_surface.get_rect(center=(screen.get_width() // 2, 120))
+        screen.blit(first_surface, first_rect)
+        max_width = max(max_width, first_surface.get_width())
+
+        rest_entries = lines[1:5]  # Rest of the entries to be displayed under "The Rest"
+
+        # Render "The Rest" below the first-place entry
+        rest_text = scoreboard_font.render("The Rest", True, white)
+        rest_rect = rest_text.get_rect(center=(screen.get_width() // 2, 200))
+        screen.blit(rest_text, rest_rect)
+
+        starting_y = 250
+        padding = 60  # Increased padding between entries
+        for i, line in enumerate(rest_entries):  # Display rest of the scores
+            score_data = line.strip().split(',')
+            name = score_data[0]
+            score = int(score_data[1])
+
+            score_text = f"{i + 2}. {name}: {score}"  # Start numbering from 2 for the rest
+            score_surface = scoreboard_font.render(score_text, True, white)
+            score_entries.append(score_surface)
+            max_width = max(max_width, score_surface.get_width())
+
+        max_width += 20  # Adding additional padding to the maximum width
+
+        starting_y = 250
+        for i, entry in enumerate(score_entries):  # Render rest of the entries with adjusted alignment
+            entry_rect = entry.get_rect(center=(screen.get_width() // 2, starting_y))
+            entry_rect.centerx = screen.get_width() // 2  # Set the center of the rect horizontally
+            screen.blit(entry, entry_rect)
+            starting_y += padding  # Increase the Y-coordinate spacing between entries
+
+
+    except FileNotFoundError:
+        error_message = scoreboard_font.render("No scores yet!", True, white)
+        error_rect = error_message.get_rect(center=(screen.get_width() // 2, 200))
+        screen.blit(error_message, error_rect)
+
+
+    pygame.display.flip()
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    mainMenu(screen)
+
+
+def mainMenu(screen):
+    menu_font = pygame.font.Font(None, 36)
+    selected_option = 0
+    menu_options = ["Start Game","Scoreboard", "Quit"]
+    username = ""
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_option = (selected_option - 1) % len(menu_options)
+                elif event.key == pygame.K_DOWN:
+                    selected_option = (selected_option + 1) % len(menu_options)
+                elif event.key == pygame.K_RETURN:
+                    if selected_option == 0:  # Start Game selected
+                        startGame()
+                    elif selected_option == 1:  # Quit selected
+                        scoreBoard()
+                    elif selected_option == 2:
+                        quit()
+                    
+                        
+
+        screen.fill(black)
+
+        for idx, option in enumerate(menu_options):
+            if idx == selected_option:
+                text_surface = menu_font.render("> " + option + " <", True, white)
+            else:
+                text_surface = menu_font.render(option, True, white)
+            screen.blit(text_surface, (200, 200 + idx * 50))
+
+        pygame.display.flip()
+
+def initScreen():
+    pygame.init()
+    screen = pygame.display.set_mode([800, 600])
+    pygame.display.set_caption('Main Menu')
+    return screen
+
+def main():
+    username = mainMenu(screen)
+    if username:
+        print("Username entered:", username)
+        startGame()
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
