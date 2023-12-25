@@ -199,7 +199,7 @@ class Player(pygame.sprite.Sprite):
 
 #Inheritime Player klassist
 class Ghost(Player):
-    # Change the speed of player or the susmen
+    # Change the speed of the ghost
     def changespeed(self,list,ghost,turn,steps,l):
       try:
         z=list[turn][2]
@@ -222,20 +222,35 @@ class Ghost(Player):
          return [0,0]
 
 Pinky_directions = [
-[0,-30,4],
+[0,-15,2],
+[0,0,5],
+[0,-15,2],
+[0,0,5],
 [15,0,9],
 [0,15,11],
+[0,0,3],
 [-15,0,23],
+[0,0,5],
 [0,15,7],
+[0,0,5],
 [15,0,3],
+[0,0,5],
 [0,-15,3],
+[0,0,5],
 [15,0,19],
+[0,15,3],
+[0,0,1],
 [15,0,3],
+[0,15,3],
+[15,0,3],
+[0,0,5],
 [0,-15,15],
 [-15,0,7],
 [0,15,3],
+[0,0,5],
 [-15,0,19],
 [0,-15,11],
+[0,0,7],
 [15,0,9]
 ]
 
@@ -243,14 +258,25 @@ Blinky_directions = [
 [0,-15,4],
 [15,0,9],
 [0,15,11],
+[0,0,5],
 [15,0,3],
 [0,15,7],
+[0,0,5],
 [-15,0,11],
 [0,15,3],
+[15,0,15],
+[0,0,5],
+[0,-15,15],
+[15,0,3],
+[0,0,5],
+[0,-15,11],
+[-15,0,3],
+[0,0,5],
 [0,-15,11],
 [-15,0,3],
 [0,-15,3],
 [-15,0,7],
+[0,0,3],
 [0,-15,3],
 [15,0,15],
 [0,15,15],
@@ -258,9 +284,11 @@ Blinky_directions = [
 [0,15,3],
 [-15,0,3],
 [0,-15,7],
+[0,0,5],
 [-15,0,3],
 [0,15,7],
 [-15,0,11],
+[0,0,3],
 [0,-15,7],
 [15,0,5]
 ]
@@ -268,16 +296,30 @@ Blinky_directions = [
 Inky_directions = [
 [30,0,2],
 [0,-15,4],
+[0,0,2],
 [15,0,10],
 [0,15,7],
+[0,0,2],
 [15,0,3],
 [0,-15,3],
 [15,0,3],
+[0,0,2],
 [0,-15,15],
 [-15,0,15],
 [0,15,3],
 [15,0,15],
+[0,0,2],
 [0,15,11],
+[-15,0,3],
+[0,0,2],
+[0,-15,7],
+[-15,0,11],
+[0,0,2],
+[0,15,3],
+[-15,0,11],
+[0,15,7],
+[0,0,2],
+[-15,0,3],
 [0,-15,3],
 [-15,0,3],
 [0,-15,15],
@@ -285,26 +327,34 @@ Inky_directions = [
 [0,15,3],
 [-15,0,15],
 [0,15,11],
+[0,0,2],
 [15,0,3],
 [0,-15,11],
 [15,0,11],
 [0,15,3],
+[0,0,2],
 [15,0,1],
 ]
 
 Clyde_directions = [
 [-30,0,2],
+[0,0,4],
 [0,-15,4],
 [15,0,5],
 [0,15,7],
 [-15,0,11],
+[0,-15,7],
 [-15,0,3],
+[0,0,5],
 [0,15,7],
 [-15,0,7],
 [0,15,15],
+[15,0,15],
 [0,-15,3],
 [-15,0,11],
 [0,-15,7],
+[0,0,6],
+[15,0,3],
 [0,-15,11],
 [15,0,9],
 ]
@@ -544,7 +594,9 @@ def nameEntry(screen):
                     name += event.unicode  # Add typed character to name
 
     # Clear the screen
-    screen.fill(black)
+    #screen.fill(black)
+    name_background = pygame.image.load('Pacman/images/name-entry.png')
+    screen.blit(name_background, (-20,0))
     # Render name entry text
     text_surface = input_font.render("Enter your name: " + name, True, white)
     screen.blit(text_surface, (100, 200))
@@ -611,7 +663,9 @@ def nameEntry(screen):
                 else:
                     name += event.unicode  # Add typed character to name
 
-        screen.fill(black)
+        #screen.fill(black)
+        name_background = pygame.image.load('Pacman/images/name-entry.png')
+        screen.blit(name_background, (-20,0))
 
         text_surface = input_font.render("Enter your name: " + name, True, white)
         screen.blit(text_surface, (100, 200))
@@ -622,7 +676,9 @@ def nameEntry(screen):
 
 def scoreBoard():
 
-    screen.fill(black)
+    #screen.fill(black)
+    score_background = pygame.image.load('Pacman/images/scoreboard.png')
+    screen.blit(score_background, (-20,0))
     scoreboard_font = pygame.font.Font(None, 36)
 
     try:
@@ -725,14 +781,16 @@ def mainMenu(screen):
                     
                         
 
-        screen.fill(black)
+        #screen.fill(black)
+        welc_background = pygame.image.load('Pacman/images/welcome.png')
+        screen.blit(welc_background, (-30,0))
 
         for idx, option in enumerate(menu_options):
             if idx == selected_option:
                 text_surface = menu_font.render("> " + option + " <", True, white)
             else:
                 text_surface = menu_font.render(option, True, white)
-            screen.blit(text_surface, (200, 200 + idx * 50))
+            screen.blit(text_surface, (200, 375 + idx * 50))
 
         pygame.display.flip()
 
