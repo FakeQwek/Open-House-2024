@@ -11,11 +11,10 @@ Deadline: 04/01/2024
 ## Implemented
 * Theme and Sprite changes
 * Music Change
-* Ghost speed (Easy)
 * Scoreboard 
 * Welcome Screen
 * Multiplayer
-
+* Difficulty Select
 ## To be Implemented
 * Cleaner code
 
