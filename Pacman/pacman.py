@@ -377,7 +377,7 @@ def speedAlgorithm(pintlow,pintup,dintlow,dintup, directions_copy):
         while pause_amount > 0:
             pause_duration = random.randint(dintlow,dintup)
             set_length = len(direction_set) -1
-            set_index = random.randint(0,set_length)
+            set_index = random.randint(2,set_length)
             direction_set.insert(set_index, [0,0,pause_duration])
             pause_amount -= 1
     
@@ -390,16 +390,16 @@ def startGame():
   return_value = difficultySelect(screen)
   #Adds pauses if difficulty is easy or medium
   if return_value == 0:
-    directions = all_directions.copy()
-    speedAlgorithm(5,7,2,4, directions)
+    directions = copy.deepcopy(all_directions)
+    speedAlgorithm(5,7,2,5, directions)
     
   elif return_value == 1:
-    directions = all_directions.copy()
+    directions = copy.deepcopy(all_directions)
     speedAlgorithm(2,3,1,3, directions)
 
   elif return_value == 2:
-    directions = all_directions.copy()
-    speedAlgorithm(1,2,1,2, directions) 
+    directions = copy.deepcopy(all_directions)
+     
   Pinky_directions = directions[0]
   Blinky_directions = directions[1]
   Inky_directions = directions[2]
