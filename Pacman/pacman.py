@@ -2,17 +2,20 @@
 #https://github.com/hbokmann/Pacman
   
 import pygame #._view
-  
+import random
+import copy
 black = (0,0,0)
 white = (255,255,255)
 blue = (0,0,255)
 green = (0,255,0)
 red = (255,0,0)
 purple = (255,0,255)
-yellow   = ( 255, 255,   0)
+yellow   = (255,255,0)
+colours = [blue,green,red,purple,yellow]
+rand_color = random.randint(0,len(colours))
 
-Trollicon=pygame.image.load('Pacman\\images\\Overflow.png')
-pygame.display.set_icon(Trollicon)
+overflow_icon =pygame.image.load('Pacman\\images\\Overflow.png')
+pygame.display.set_icon(overflow_icon)
 
 #Add music =================================== Future can add our own music =========================================
 # pygame.mixer.init()
@@ -83,7 +86,7 @@ def setupRoomOne(all_sprites_list):
      
     # Loop through the list. Create the wall, add it to the list
     for item in walls:
-        wall=Wall(item[0],item[1],item[2],item[3],blue)
+        wall=Wall(item[0],item[1],item[2],item[3],colours[rand_color-1])
         wall_list.add(wall)
         all_sprites_list.add(wall)
          
@@ -221,116 +224,6 @@ class Ghost(Player):
       except IndexError:
          return [0,0]
 
-Pinky_directions = [
-[0,-30,4],
-[15,0,9],
-[0,15,11],
-[-15,0,23],
-[0,15,7],
-[15,0,3],
-[0,-15,3],
-[15,0,19],
-[0,15,3],
-[15,0,3],
-[0,15,3],
-[15,0,3],
-[0,-15,15],
-[-15,0,7],
-[0,15,3],
-[-15,0,19],
-[0,-15,11],
-[15,0,9]
-]
-
-Blinky_directions = [
-[0,-15,4],
-[15,0,9],
-[0,15,11],
-[15,0,3],
-[0,15,7],
-[-15,0,11],
-[0,15,3],
-[15,0,15],
-[0,-15,15],
-[15,0,3],
-[0,-15,11],
-[-15,0,3],
-[0,-15,11],
-[-15,0,3],
-[0,-15,3],
-[-15,0,7],
-[0,-15,3],
-[15,0,15],
-[0,15,15],
-[-15,0,3],
-[0,15,3],
-[-15,0,3],
-[0,-15,7],
-[-15,0,3],
-[0,15,7],
-[-15,0,11],
-[0,-15,7],
-[15,0,5]
-]
-
-Inky_directions = [
-[30,0,2],
-[0,-15,4],
-[15,0,10],
-[0,15,7],
-[15,0,3],
-[0,-15,3],
-[15,0,3],
-[0,-15,15],
-[-15,0,15],
-[0,15,3],
-[15,0,15],
-[0,15,11],
-[-15,0,3],
-[0,-15,7],
-[-15,0,11],
-[0,15,3],
-[-15,0,11],
-[0,15,7],
-[-15,0,3],
-[0,-15,3],
-[-15,0,3],
-[0,-15,15],
-[15,0,15],
-[0,15,3],
-[-15,0,15],
-[0,15,11],
-[15,0,3],
-[0,-15,11],
-[15,0,11],
-[0,15,3],
-[15,0,1],
-]
-
-Clyde_directions = [
-[-30,0,2],
-[0,-15,4],
-[15,0,5],
-[0,15,7],
-[-15,0,11],
-[0,-15,7],
-[-15,0,3],
-[0,15,7],
-[-15,0,7],
-[0,15,15],
-[15,0,15],
-[0,-15,3],
-[-15,0,11],
-[0,-15,7],
-[15,0,3],
-[0,-15,11],
-[15,0,9],
-]
-
-pl = len(Pinky_directions)-1
-bl = len(Blinky_directions)-1
-il = len(Inky_directions)-1
-cl = len(Clyde_directions)-1
 
 # Call this function so the Pygame library can initialize itself
 pygame.init()
@@ -369,9 +262,152 @@ b_h = (3*60)+19 #Binky height
 i_w = 303-16-32 #Inky width
 c_w = 303+(32-16) #Clyde width
 
+Pinky_directions_og = [
+[0,-30,4],
+[15,0,9],
+[0,15,11],
+[-15,0,23],
+[0,15,7],
+[15,0,3],
+[0,-15,3],
+[15,0,19],
+[0,15,3],
+[15,0,3],
+[0,15,3],
+[15,0,3],
+[0,-15,15],
+[-15,0,7],
+[0,15,3],
+[-15,0,19],
+[0,-15,11],
+[15,0,9]
+]
+
+Blinky_directions_og = [
+[0,-15,4],
+[15,0,9],
+[0,15,11],
+[15,0,3],
+[0,15,7],
+[-15,0,11],
+[0,15,3],
+[15,0,15],
+[0,-15,15],
+[15,0,3],
+[0,-15,11],
+[-15,0,3],
+[0,-15,11],
+[-15,0,3],
+[0,-15,3],
+[-15,0,7],
+[0,-15,3],
+[15,0,15],
+[0,15,15],
+[-15,0,3],
+[0,15,3],
+[-15,0,3],
+[0,-15,7],
+[-15,0,3],
+[0,15,7],
+[-15,0,11],
+[0,-15,7],
+[15,0,5]
+]
+
+Inky_directions_og = [
+[30,0,2],
+[0,-15,4],
+[15,0,10],
+[0,15,7],
+[15,0,3],
+[0,-15,3],
+[15,0,3],
+[0,-15,15],
+[-15,0,15],
+[0,15,3],
+[15,0,15],
+[0,15,11],
+[-15,0,3],
+[0,-15,7],
+[-15,0,11],
+[0,15,3],
+[-15,0,11],
+[0,15,7],
+[-15,0,3],
+[0,-15,3],
+[-15,0,3],
+[0,-15,15],
+[15,0,15],
+[0,15,3],
+[-15,0,15],
+[0,15,11],
+[15,0,3],
+[0,-15,11],
+[15,0,11],
+[0,15,3],
+[15,0,1],
+]
+
+Clyde_directions_og = [
+[-30,0,2],
+[0,-15,4],
+[15,0,5],
+[0,15,7],
+[-15,0,11],
+[0,-15,7],
+[-15,0,3],
+[0,15,7],
+[-15,0,7],
+[0,15,15],
+[15,0,15],
+[0,-15,3],
+[-15,0,11],
+[0,-15,7],
+[15,0,3],
+[0,-15,11],
+[15,0,9],
+]
+
+all_directions = [Pinky_directions_og, Blinky_directions_og, Inky_directions_og, Clyde_directions_og]
+
+#Generates random pause amount and pause duration for ghost
+def speedAlgorithm(pintlow,pintup,dintlow,dintup, directions_copy):
+    for direction_set in directions_copy:
+        pause_amount = random.randint(pintlow,pintup)
+        while pause_amount > 0:
+            pause_duration = random.randint(dintlow,dintup)
+            set_length = len(direction_set) -1
+            set_index = random.randint(2,set_length)
+            direction_set.insert(set_index, [0,0,pause_duration])
+            pause_amount -= 1
+    
+
+
 def startGame():
 
   username = nameEntry(screen)
+  
+  return_value = difficultySelect(screen)
+  #Adds pauses if difficulty is easy or medium
+  if return_value == 0:
+    directions = copy.deepcopy(all_directions)
+    speedAlgorithm(5,7,2,5, directions)
+    
+  elif return_value == 1:
+    directions = copy.deepcopy(all_directions)
+    speedAlgorithm(2,3,1,3, directions)
+
+  elif return_value == 2:
+    directions = copy.deepcopy(all_directions)
+     
+  Pinky_directions = directions[0]
+  Blinky_directions = directions[1]
+  Inky_directions = directions[2]
+  Clyde_directions = directions[3]
+  pl = len(Pinky_directions)-1
+  bl = len(Blinky_directions)-1
+  il = len(Inky_directions)-1
+  cl = len(Clyde_directions)-1
   all_sprites_list = pygame.sprite.RenderPlain()
 
   block_list = pygame.sprite.RenderPlain()
@@ -525,7 +561,7 @@ def startGame():
     
       
 
-      text=font.render("Score: "+str(score)+"/"+str(bll), True, red)
+      text=font.render("Score: "+str(score)+"/"+str(bll), True, white)
       screen.blit(text, [10, 10])
 
       if score == bll:
@@ -545,6 +581,11 @@ def startGame():
       pygame.display.flip()
     
       clock.tick(10)
+
+# Function draws text
+def draw_text(text, font, color, x, y):
+    img = font.render(text, True, color)
+    screen.blit(img, (x,y))
 
 def nameEntry(screen):
   input_font = pygame.font.Font(None, 36)
@@ -566,12 +607,47 @@ def nameEntry(screen):
     name_background = pygame.image.load('Pacman/images/name-entry.png')
     screen.blit(name_background, (-20,0))
     # Render name entry text
-    text_surface = input_font.render("Enter your name: " + name, True, white)
-    screen.blit(text_surface, (100, 200))
-
+    draw_text("Enter your name: " + name, input_font, white, 100, 200)
     pygame.display.flip()
 
   return name
+
+def difficultySelect(screen):
+  font = pygame.font.Font(None, 36)
+  title_font = pygame.font.Font(None,42)
+  selected_option = 0
+  difficulty_options = ["Easy", "Medium", "Hard"]
+  return_value = 3
+  active = True
+  while active: 
+      for event in pygame.event.get():
+          if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    selected_option = (selected_option - 1) % len(difficulty_options)
+                elif event.key == pygame.K_DOWN:
+                    selected_option = (selected_option + 1) % len(difficulty_options)
+                elif event.key == pygame.K_RETURN:
+                    if selected_option == 0:  # Easy, Medium, Hard
+                        return_value = 0
+                    elif selected_option == 1: 
+                        return_value = 1
+                    elif selected_option == 2:
+                        return_value = 2
+                    active = False
+      
+      diff_background = pygame.image.load('Pacman/images/scoreboard.png')
+      screen.blit(diff_background, (-30,0))
+      draw_text("Select Difficulty", title_font, white, 180, 75)
+      for idx, option in enumerate(difficulty_options):
+            if idx == selected_option:
+                draw_text("> " + option + " <", font, white, 240, 195 + idx * 50)
+                
+            else:
+                draw_text(option, font, white, 240, 195 + idx * 50)
+      pygame.display.flip()
+  return return_value                 
+          
+
 
 
 def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate):
@@ -616,31 +692,7 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 blue = (0, 0, 255)
 
-def nameEntry(screen):
-    input_font = pygame.font.Font(None, 36)
-    name = ""
-    input_active = True
 
-    while input_active:
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN and len(name) > 0:
-                    input_active = False  # Player entered name, exit loop
-                elif event.key == pygame.K_BACKSPACE:
-                    name = name[:-1]  # Remove last character on backspace
-                else:
-                    name += event.unicode  # Add typed character to name
-
-        #screen.fill(black)
-        name_background = pygame.image.load('Pacman/images/name-entry.png')
-        screen.blit(name_background, (-20,0))
-
-        text_surface = input_font.render("Enter your name: " + name, True, white)
-        screen.blit(text_surface, (100, 200))
-
-        pygame.display.flip()
-
-    return name
 
 def scoreBoard():
 
@@ -724,7 +776,10 @@ def scoreBoard():
                     mainMenu(screen)
 
 
+
 def mainMenu(screen):
+    # Defines font
+    
     menu_font = pygame.font.Font(None, 36)
     selected_option = 0
     menu_options = ["Start Game","Scoreboard", "Quit"]
@@ -747,29 +802,28 @@ def mainMenu(screen):
                     elif selected_option == 2:
                         quit()
                     
-                        
 
-        #screen.fill(black)
         welc_background = pygame.image.load('Pacman/images/welcome.png')
         screen.blit(welc_background, (-30,0))
-
         for idx, option in enumerate(menu_options):
             if idx == selected_option:
-                text_surface = menu_font.render("> " + option + " <", True, white)
+                draw_text("> " + option + " <", font, white, 200, 375 + idx * 50)
+                
             else:
-                text_surface = menu_font.render(option, True, white)
-            screen.blit(text_surface, (200, 375 + idx * 50))
-
+                draw_text(option, font, white, 200, 375 + idx * 50)
         pygame.display.flip()
 
 def initScreen():
+    # Basic initialisation
     pygame.init()
     screen = pygame.display.set_mode([800, 600])
     pygame.display.set_caption('Main Menu')
+    
     return screen
 
 def main():
     username = mainMenu(screen)
+     
     if username:
         print("Username entered:", username)
         startGame()
