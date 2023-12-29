@@ -13,7 +13,7 @@ green = (0,255,0)
 red = (255,0,0)
 purple = (255,0,255)
 yellow   = ( 255, 255,   0)
-colours = [blue,green,red,purple,yellow]
+colours = [blue,green,purple,yellow]
 rand_color = random.randint(0,len(colours))
 
 Trollicon=pygame.image.load('Pacman\\images\\Overflow.png')
@@ -605,6 +605,8 @@ def startSingleplayerGame():
    
       # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
       screen.fill(black)
+    #   bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
+    #   screen.blit(bg, (50, 50)) ######## uncomment for map background ##########
         
       wall_list.draw(screen)
       gate.draw(screen)
@@ -853,6 +855,8 @@ def startMultiplayerGame():
    
       # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
       screen.fill(black)
+    #   bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
+    #   screen.blit(bg, (0, 0)) ######## uncomment for map background ##########
         
       wall_list.draw(screen)
       gate.draw(screen)
@@ -862,14 +866,14 @@ def startMultiplayerGame():
       
 
       text=font.render("Score: "+str(score)+"/"+str(bll), True, red)
-      screen.blit(text, [10, 10])
-      text1=font.render("Light Score: "+str(pacman1_score)+"/"+str(bll), True, red)
-      screen.blit(text1, [10, 40])
-      text2=font.render("Dark Score: "+str(pacman2_score)+"/"+str(bll), True, red)
-      screen.blit(text2, [10, 70])
+      screen.blit(text, [300, 10])
+      text1=font.render("Light: "+str(pacman1_score)+"/"+str(bll), True, red)
+      screen.blit(text1, [10, 10])
+      text2=font.render("Dark: "+str(pacman2_score)+"/"+str(bll), True, red)
+      screen.blit(text2, [160, 10])
 
       game_time =font.render(f"Time: {stopwatch_time:.4f}", True, red)
-      screen.blit(game_time, [430, 10])
+      screen.blit(game_time, [450, 10])
 
       if score == bll:
         if return_value == 0:
@@ -890,8 +894,8 @@ def startMultiplayerGame():
       monsta_hit_list2 = pygame.sprite.spritecollide(Pacman2, monsta_list, False)
 
       if monsta_hit_list or monsta_hit_list2:
-        with open ('scoresMultiplayer.csv', 'a') as file:
-            file.write(username + " , " + str(score) +'\n')
+        # with open ('scoresMultiplayer.csv', 'a') as file:
+        #     file.write(username + " , " + str(score) +'\n')
         doNextMultiplayer("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
 
       # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
