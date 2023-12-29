@@ -422,6 +422,7 @@ clock = pygame.time.Clock()
 
 pygame.font.init()
 font = pygame.font.Font("freesansbold.ttf", 24)
+font_small = pygame.font.Font("freesansbold.ttf", 20)
 
 #default locations for Pacman and monstas
 w = 303-16 #Width
@@ -605,8 +606,8 @@ def startSingleplayerGame():
    
       # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
       screen.fill(black)
-    #   bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
-    #   screen.blit(bg, (50, 50)) ######## uncomment for map background ##########
+      bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
+      screen.blit(bg, (200, 200)) ######## uncomment for map background ##########
         
       wall_list.draw(screen)
       gate.draw(screen)
@@ -855,8 +856,8 @@ def startMultiplayerGame():
    
       # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
       screen.fill(black)
-    #   bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
-    #   screen.blit(bg, (0, 0)) ######## uncomment for map background ##########
+      bg = pygame.image.load('Pacman/images/map_bg.png') ######## uncomment for map background ##########
+      screen.blit(bg, (200, 200)) ######## uncomment for map background ##########
         
       wall_list.draw(screen)
       gate.draw(screen)
@@ -865,15 +866,15 @@ def startMultiplayerGame():
     
       
 
-      text=font.render("Score: "+str(score)+"/"+str(bll), True, red)
+      text=font_small.render("Score: "+str(score)+"/"+str(bll), True, red)
       screen.blit(text, [300, 10])
-      text1=font.render("Light: "+str(pacman1_score)+"/"+str(bll), True, red)
+      text1=font_small.render("Light: "+str(pacman1_score)+"/"+str(bll), True, red)
       screen.blit(text1, [10, 10])
-      text2=font.render("Dark: "+str(pacman2_score)+"/"+str(bll), True, red)
+      text2=font_small.render("Dark: "+str(pacman2_score)+"/"+str(bll), True, red)
       screen.blit(text2, [160, 10])
 
-      game_time =font.render(f"Time: {stopwatch_time:.4f}", True, red)
-      screen.blit(game_time, [450, 10])
+      game_time =font_small.render(f"Time: {stopwatch_time:.4f}", True, red)
+      screen.blit(game_time, [460, 10])
 
       if score == bll:
         if return_value == 0:
